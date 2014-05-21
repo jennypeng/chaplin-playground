@@ -3,7 +3,9 @@ ImageModel      = require '../models/image' #image is the submodel of the collec
 
 module.exports = class PhotosCollection extends Collection
   model: ImageModel
-  url: '/photos.json' 
+  page: 1
+  url: ->
+  	return '/photos' + @.page + '.json'
   # parse: (response) ->
   # 	console.log("parse returns", response.results)
   # 	return JSON.parse(response).objects;

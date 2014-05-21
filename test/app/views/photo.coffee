@@ -5,12 +5,23 @@ module.exports = class PhotoView extends View
   template: require '../templates/photo'
   autoRender: true
   className: 'container'
+  events:
+    'click button.editImage' : 'editImage'
   # listen:
   #   'addedToDOM' : 'onAddedToDOM'
   initialize: ->
     super
+    @model.on 'change', ->
+      console.log 'image has been changed!!!'
+      @.render()
+      #PLEASE WHY NOT RENDER
     console.log("model is ", @model)
     console.log("model collection ", @model.collection)
+    
+  editImage: ->
+    console.log "editing image"
+    console.log @model.edit
+    @model.edit
     
   # onAddedToDOM: ->
   #   imageTitle = @$('input[name=imageTitle]').value

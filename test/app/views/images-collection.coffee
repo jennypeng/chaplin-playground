@@ -1,4 +1,6 @@
 CollectionView = require './base/collection-view'
+$ = require 'jquery'
+_ = require 'underscore'
 #View = require './base/view'
 ImageModel = require '../models/image'
 PhotoView = require './photo'
@@ -6,8 +8,6 @@ PhotoView = require './photo'
 module.exports = class ImagesCollectionView extends CollectionView
   autoRender: true
   itemView: PhotoView
-  # listen:
-  #   'addedToDOM' : 'onAddedToDOM'
   events:
     'click input.submit' : 'clicked'
     'click button.add' : 'clicked'
@@ -25,7 +25,15 @@ module.exports = class ImagesCollectionView extends CollectionView
       console.log "something was reset"
     @collection.on 'change', ->
       @.render()
+    $(document).on('scroll', _.bind(@.checkScroll, @))
     @collection.fetch reset: true, success: @onFetchSuccess, error: @onFetchError
+  checkScroll: -> #this doesn't do anything 
+    triggerPoint = 100 
+    if @.el.scrollTop + @.el.clientHeight + triggerPoint > @.el.scrollHeight
+      console.log 'reached point'
+      @collection.page += 1
+      console.log @collection.page
+      @collection.fetch #refetch after images
 
   onFetchSuccess: (model, response, options) ->
     console.log("SUCESSS!")
@@ -34,13 +42,14 @@ module.exports = class ImagesCollectionView extends CollectionView
     console.log("FAILURE")
 
   clicked: ->
-    #console.log("yooo")
+    #add validation later
     imageTitle = @$('input[name=imageTitle]').val()
     imageSrc = @$('input[name=imageSrc]').val()
     imageCaption = @$('input[name=imageCaption]').val()
-    console.log("hefawefaewf " + imageCaption)
+    
+
     image = {imageTitle: imageTitle, imageCaption: imageCaption, imageSrc: imageSrc} #for some reason if you put here, not in intialize it works
-    @collection.push image
+    @collection.push image #
 
   # onAddedToDOM: ->
   #   imageTitle = @$('input[name=imageTitle]').val()
