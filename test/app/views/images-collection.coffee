@@ -4,6 +4,7 @@ _ = require 'underscore'
 #View = require './base/view'
 ImageModel = require '../models/image'
 PhotoView = require './photo'
+mediator = require('chaplin').mediator
 
 module.exports = class ImagesCollectionView extends CollectionView
   autoRender: true
@@ -15,6 +16,7 @@ module.exports = class ImagesCollectionView extends CollectionView
   listSelector: '.photos'
   template: require '../templates/photos'
   initialize: ->
+    @subscribeEvent 'newImage', @newImage
     super
     @collection.on 'add', ->
       @.render()
@@ -27,6 +29,9 @@ module.exports = class ImagesCollectionView extends CollectionView
       @.render()
     $(document).on('scroll', _.bind(@.checkScroll, @))
     @collection.fetch reset: true, success: @onFetchSuccess, error: @onFetchError
+  newImage: ->
+    console.log 'image added, called from published event'
+    
   checkScroll: -> #this doesn't do anything 
     triggerPoint = 100 
     if @.el.scrollTop + @.el.clientHeight + triggerPoint > @.el.scrollHeight

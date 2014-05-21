@@ -1,5 +1,6 @@
 $ = require 'jquery'
 View = require './base/view'
+mediator = require('chaplin').mediator
 
 module.exports = class PhotoView extends View
   template: require '../templates/photo'
@@ -11,6 +12,7 @@ module.exports = class PhotoView extends View
   #   'addedToDOM' : 'onAddedToDOM'
   initialize: ->
     super
+    @publishEvent 'newImage' # publish the new image event on initializiaitont aelfj
     @model.on 'change', ->
       console.log 'image has been changed!!!'
       @.render()
